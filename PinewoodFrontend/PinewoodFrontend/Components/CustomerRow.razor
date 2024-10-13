@@ -1,0 +1,14 @@
+﻿@using PinewoodFrontend.Shared
+
+<div class="customer-row" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 5em 5em; border-bottom: 1px solid #2b69cc;">
+    <div class="customer-first-name">@Customer.Id</div>
+    <div class="customer-first-name">@Customer.FirstName</div>
+    <div class="customer-last-name">@Customer.LastName</div>
+    <div class="customer-dob">@Customer.Dob.ToShortDateString()</div>
+    <button>Edit</button>
+    <button style="background-color: red; color: white;">Delete</button>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public Customer Customer { get; set; } = new();
+}

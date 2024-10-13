@@ -14,16 +14,7 @@ namespace PinewoodFrontend.Services
 
         public async Task<string> GetMessage()
         {
-            HttpResponseMessage response = null;
-
-            try
-            {
-				response = await httpClient.GetAsync("/Test");
-			}
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+			var response = await httpClient.GetAsync("/Test");
 
             var message = await response.Content.ReadAsStringAsync();
 

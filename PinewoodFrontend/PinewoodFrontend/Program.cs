@@ -11,5 +11,6 @@ builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("http
 
 // Add injectables
 builder.Services.AddSingleton<ITestService, TestService>();
+builder.Services.AddSingleton<ICustomerService, CustomerService>();
 
 await builder.Build().RunAsync();

@@ -22,12 +22,9 @@ namespace PinewoodBackend.Controllers
         }
 
 		[HttpGet(Name = "GetAll")]
-		public IEnumerable<string> GetAllCustomers()
+		public string GetAllCustomers()
 		{
-            return Customer.customers.Select((customer) => {
-                var customerJson = JsonSerializer.Serialize(customer);
-                return customerJson;
-            });
+			return JsonSerializer.Serialize(Customer.customers);
 		}
 
 		[HttpGet("{id}", Name = "GetById")]

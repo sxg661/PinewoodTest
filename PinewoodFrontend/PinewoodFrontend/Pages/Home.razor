@@ -1,20 +1,45 @@
 ﻿@page "/"
+@using PinewoodFrontend.Components
 @using PinewoodFrontend.Services
+@using PinewoodFrontend.Shared
 @inject ITestService TestService
+@inject ICustomerService CustomerService
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Customers</PageTitle>
 
-<h1>Hello, world!</h1>
+<div style="margin: 100px">
+	<h1>Customers</h1>
 
-Welcome to your new app.
+	<div class="title-row" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 10em; border-bottom: 1px solid #2b69cc; font-weight: bold;">
+		<div>Id</div>
+		<div>First Name</div>
+		<div>Last Name</div>
+		<div>Date of Birth</div>
+	</div>
 
-<p>@Message</p>
+	<div class="customer-container" style="display: flex; flex-direction: column; gap: 5px;">
+		@foreach(var customer in Customers)
+		{
+			<CustomerRow Customer=customer></CustomerRow>
+		}
+	</div>
+</div>
 
 @code {
 	public string Message { get; set; } = "Unset";
+	public IEnumerable<Customer> Customers { get; set; } = [];
+
+	public Customer testCustomer = new Customer()
+		{
+			Id = "fhjoidlu5ietrnfjkd",
+			FirstName = "Bob",
+			LastName = "Brown",
+			Dob = new DateTime(1980, 6, 2)
+		};
 
 	protected override async Task OnInitializedAsync()
 	{
 		Message = await TestService.GetMessage();
+		Customers = await CustomerService.GetCustomers();
 	}
 }
