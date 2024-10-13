@@ -10,7 +10,6 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7051") });
 
 // Add injectables
-builder.Services.AddSingleton<ITestService, TestService>();
 builder.Services.AddSingleton<ICustomerService, CustomerService>();
 
 await builder.Build().RunAsync();

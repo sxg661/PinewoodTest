@@ -1,4 +1,5 @@
 using Microsoft.VisualBasic;
+using PinewoodBackend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add injectables
+builder.Services.AddSingleton<ICustomerService, CustomerService>();
 
 var MyAllowFrontend = "_myAllowFrontend";
 builder.Services.AddCors(options =>

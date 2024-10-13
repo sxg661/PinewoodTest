@@ -2,7 +2,6 @@
 @using PinewoodFrontend.Components
 @using PinewoodFrontend.Services
 @using PinewoodFrontend.Shared
-@inject ITestService TestService
 @inject ICustomerService CustomerService
 
 <PageTitle>Customers</PageTitle>
@@ -26,7 +25,6 @@
 </div>
 
 @code {
-	public string Message { get; set; } = "Unset";
 	public IEnumerable<Customer> Customers { get; set; } = [];
 
 	public Customer testCustomer = new Customer()
@@ -39,7 +37,6 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		Message = await TestService.GetMessage();
 		Customers = await CustomerService.GetCustomers();
 	}
 }

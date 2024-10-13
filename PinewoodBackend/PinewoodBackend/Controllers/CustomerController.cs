@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PinewoodBackend.Entity;
+using PinewoodBackend.Services;
 using System.Text.Json;
 
 namespace PinewoodBackend.Controllers
@@ -8,29 +8,22 @@ namespace PinewoodBackend.Controllers
     [Route("[controller]")]
     public class CustomerController : ControllerBase
     {
-        private void AddNewCustomer(string firstName, string lastName, DateTime dob)
-        {
-            var newCustomer = new Customer
-            {
-                Id = Customer.NewId,
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dob
-            };
-
-            Customer.customers.Add(newCustomer);
-        }
+		private ICustomerService customerService;
+		public CustomerController(ICustomerService customerService)
+		{
+			this.customerService = customerService;
+		}
 
 		[HttpGet(Name = "GetAll")]
 		public string GetAllCustomers()
 		{
-			return JsonSerializer.Serialize(Customer.customers);
+			return JsonSerializer.Serialize(customerService.GetAllCustomers());
 		}
 
 		[HttpGet("{id}", Name = "GetById")]
 		public ActionResult GetCustomer(string id)
 		{
-			var customer = Customer.customers.FirstOrDefault((customer) => customer.Id == id);
+			var customer = customerService.GetCustomerByID(id);
 
 			if(customer == null)
 			{
@@ -44,33 +37,23 @@ namespace PinewoodBackend.Controllers
 		[HttpPut(Name = "Create")]
 		public ActionResult CreateCustomer(string firstName, string lastName, DateTime dob)
         {
-            AddNewCustomer(firstName, lastName, dob);
-            return StatusCode(200);
+            customerService.AddNewCustomer(firstName, lastName, dob);
+            return StatusCode(200, "Creation successful");
         }
 
-		[HttpPatch("{id}", Name = "Modify")]
+        [HttpDelete(Name = "Delete")]
+        public ActionResult DeleteCustomer(string id)
+        {
+            customerService.DeleteCustomer(id);
+            return StatusCode(200, "Deletion successful");
+        }
+
+        [HttpPatch("{id}", Name = "Modify")]
 		public ActionResult ModifyCustomer(string id, string firstName, string lastName, DateTime dob)
 		{
-			var customer = Customer.customers.FirstOrDefault((customer) => customer.Id == id);
+			var success = customerService.ModifyCustomer(id, firstName, lastName, dob);
 
-			if (customer == null)
-			{
-				return StatusCode(404, "Customer not found");
-			}
-
-			customer.Id = id;
-			customer.FirstName = firstName;
-			customer.LastName = lastName;
-			customer.DateOfBirth = dob;
-
-			return StatusCode(200);
-		}
-
-		[HttpDelete(Name = "Delete")]
-		public ActionResult DeleteCustomer(string id)
-		{
-            Customer.customers.RemoveAll((item) => item.Id == id);
-			return StatusCode(200);
+			return success ? StatusCode(200, "Modification successful") : StatusCode(404, "Customer not found");
 		}
 	}
 }
