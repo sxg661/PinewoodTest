@@ -1,0 +1,31 @@
+﻿@page "/create-customer"
+@using PinewoodFrontend.Components
+@using PinewoodFrontend.Services
+@using PinewoodFrontend.Shared
+@inject ICustomerService CustomerService
+@inject NavigationManager NavManager
+
+<PageTitle>Create Customer</PageTitle>
+
+<CustomerForm Title="Create Customer" OnSubmitAction=CreateNewCustomer ButtonText="Create"></CustomerForm>
+
+<div id="error-message" style="color: red; white-space: pre-line;">@errorMessage</div>
+
+@code {
+	string errorMessage = "";
+
+	public async void CreateNewCustomer(string firstName, string lastName, DateTime dob)
+	{
+		bool success = await CustomerService.CreateCustomer(firstName, lastName, dob);
+
+		if (success)
+		{
+			NavManager.NavigateTo("/success/create");
+		}
+		else
+		{
+			errorMessage = "Creation failed";
+			await InvokeAsync(StateHasChanged);
+		}
+	}
+}

@@ -1,0 +1,66 @@
+﻿@page "/edit-customer/{customerId}"
+@using PinewoodFrontend.Components
+@using PinewoodFrontend.Services
+@using PinewoodFrontend.Shared
+@inject ICustomerService CustomerService
+@inject NavigationManager NavManager
+
+<PageTitle>Edit Customer</PageTitle>
+
+
+@if(customer == null)
+{
+	<h1>Edit Customer</h1>
+	<p style="color: red">Customer not found</p>
+}
+else
+{
+	<CustomerForm Title=@GetFormTitle() Customer=customer OnSubmitAction=ModifyCustomer></CustomerForm>
+}
+
+<div id="error-message" style="color: red; white-space: pre-line;">@errorMessage</div>
+
+@code {
+	[Parameter] public string customerId { get; set; } = "";
+
+	private Customer? customer;
+
+	string errorMessage = "";
+
+	protected override async Task OnInitializedAsync()
+	{
+		customer = await CustomerService.GetCustomerById(customerId);
+	}
+
+	private string GetFormTitle()
+	{
+		string customerIDText = customer != null ? customer.Id : "Unknown";
+		return $"Edit Customer with ID: {customerIDText}";
+	}
+
+	private async Task EditFail()
+	{
+		errorMessage = "Edit failed";
+		await InvokeAsync(StateHasChanged);
+	}
+
+	public async void ModifyCustomer(string firstName, string lastName, DateTime dob)
+	{
+		if(customer == null)
+		{
+			await EditFail();
+			return;
+		}
+
+		bool success = await CustomerService.ModifyCustomer(customer.Id, firstName, lastName, dob);
+
+		if (success)
+		{
+			NavManager.NavigateTo("/success/edit");
+		}
+		else
+		{
+			await EditFail();
+		}
+	}
+}

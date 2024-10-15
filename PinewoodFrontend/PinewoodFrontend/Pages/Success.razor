@@ -1,0 +1,39 @@
+﻿@page "/success/{action}"
+@using PinewoodFrontend.Components
+@using PinewoodFrontend.Services
+@using PinewoodFrontend.Shared
+@inject ICustomerService CustomerService
+@inject NavigationManager NavManager
+
+<h3>@message</h3>
+
+<button @onclick="GoHome">Ok</button>
+
+@code {
+	[Parameter] public string action { get; set; }
+
+	string message = "";
+
+	public void GoHome()
+	{
+		NavManager.NavigateTo("/");
+	}
+
+	private string GetMessage()
+	{
+		switch (action.ToLower())
+		{
+			case "create":
+				return "Creation successful!";
+			case "edit":
+				return "Edit succesful!";
+			default:
+				return "Success!";
+		}
+	}
+
+	protected override void OnInitialized()
+	{
+		message = GetMessage();
+	}
+}

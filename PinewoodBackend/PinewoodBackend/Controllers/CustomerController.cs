@@ -34,14 +34,14 @@ namespace PinewoodBackend.Controllers
 			return Content(customerJson);
 		}
 
-		[HttpPut(Name = "Create")]
+		[HttpPost(Name = "Create")]
 		public ActionResult CreateCustomer(string firstName, string lastName, DateTime dob)
         {
             customerService.AddNewCustomer(firstName, lastName, dob);
             return StatusCode(200, "Creation successful");
         }
 
-        [HttpDelete(Name = "Delete")]
+        [HttpDelete("{id}", Name = "Delete")]
         public ActionResult DeleteCustomer(string id)
         {
             customerService.DeleteCustomer(id);

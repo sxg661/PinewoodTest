@@ -1,0 +1,70 @@
+﻿@using PinewoodFrontend.Services
+@using PinewoodFrontend.Shared
+@inject NavigationManager NavManager
+
+<div style="margin: 100px">
+	<h1>@Title</h1>
+
+	<div style="display: flex; flex-direction: column; width: 200px; gap: 10px;">
+		<div>
+			<label for="first-name">First Name</label>
+			<input id="first-name" type="text" @bind="@firstName" />
+		</div>
+		<div>
+			<label for="last-name">Last Name</label>
+			<input id="last-name" type="text" @bind="@lastName" />
+		</div>
+		<div>
+			<label for="dob">Date of Birth</label>
+			<input id="dob" type="date" @bind="@dob" />
+		</div>
+
+		<button @onclick="OnSubmit">@ButtonText</button>
+
+		<div id="error-message" style="color: red; white-space: pre-line;">@errorMessage</div>
+	</div>
+
+</div>
+
+@code {
+	[Parameter] public string Title { get; set; } = "";
+
+	[Parameter] public Customer? Customer { get; set; } = null;
+
+	[Parameter] public Action<string, string, DateTime>? OnSubmitAction { get; set; } = null;
+
+	[Parameter] public string ButtonText { get; set; } = "Submit";
+
+	string firstName = "";
+	string lastName = "";
+	DateTime dob;
+	string errorMessage = "";
+
+	public async void OnSubmit()
+	{
+		errorMessage = "";
+		if (String.IsNullOrEmpty(firstName))
+		{
+			errorMessage += "First name required\n";
+		}
+		if (String.IsNullOrEmpty(lastName))
+		{
+			errorMessage += "Last name required";
+		}
+
+		if (!String.IsNullOrEmpty(errorMessage))
+		{
+			await InvokeAsync(StateHasChanged);
+			return;
+		}
+
+		OnSubmitAction?.Invoke(firstName, lastName, dob);
+	}
+
+	protected override void OnInitialized()
+	{
+		firstName = Customer != null ? Customer.FirstName : "";
+		lastName = Customer != null ? Customer.LastName : "";
+		dob = Customer != null ? Customer.Dob : new DateTime(2000, 1, 1);
+	}
+}

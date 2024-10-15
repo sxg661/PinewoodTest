@@ -3,13 +3,14 @@
 @using PinewoodFrontend.Services
 @using PinewoodFrontend.Shared
 @inject ICustomerService CustomerService
+@inject NavigationManager NavManager
 
 <PageTitle>Customers</PageTitle>
 
 <div style="margin: 100px">
 	<h1>Customers</h1>
 
-	<div class="title-row" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 10em; border-bottom: 1px solid #2b69cc; font-weight: bold;">
+	<div class="title-row" style="display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 10em; border-bottom: 1px solid #2b69cc; font-weight: bold;">
 		<div>Id</div>
 		<div>First Name</div>
 		<div>Last Name</div>
@@ -19,24 +20,37 @@
 	<div class="customer-container" style="display: flex; flex-direction: column; gap: 5px;">
 		@foreach(var customer in Customers)
 		{
-			<CustomerRow Customer=customer></CustomerRow>
+			<CustomerRow Customer=customer OnDeleteAction=DeleteCustomer OnEditAction=NavigateToEditCustomer></CustomerRow>
 		}
 	</div>
+
+	<button @onclick="GoToCreateCustomer">Create New</button>
 </div>
 
 @code {
 	public IEnumerable<Customer> Customers { get; set; } = [];
 
-	public Customer testCustomer = new Customer()
-		{
-			Id = "fhjoidlu5ietrnfjkd",
-			FirstName = "Bob",
-			LastName = "Brown",
-			Dob = new DateTime(1980, 6, 2)
-		};
-
 	protected override async Task OnInitializedAsync()
 	{
 		Customers = await CustomerService.GetCustomers();
+	}
+
+	public async void DeleteCustomer(string customerId)
+	{
+		if (await CustomerService.DeleteCustomer(customerId))
+		{
+			Customers = await CustomerService.GetCustomers();
+			await InvokeAsync(StateHasChanged);
+		}
+	}
+
+	public void NavigateToEditCustomer(string customerId)
+	{
+		NavManager.NavigateTo($"/edit-customer/{customerId}");
+	}
+
+	public void GoToCreateCustomer()
+	{
+		NavManager.NavigateTo("/create-customer");
 	}
 }

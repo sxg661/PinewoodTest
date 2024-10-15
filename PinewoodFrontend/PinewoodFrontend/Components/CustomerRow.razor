@@ -1,14 +1,19 @@
-﻿@using PinewoodFrontend.Shared
+﻿@using PinewoodFrontend.Services
+@using PinewoodFrontend.Shared
+@inject NavigationManager NavManager
 
-<div class="customer-row" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 5em 5em; border-bottom: 1px solid #2b69cc;">
+<div id="customer-@Customer.Id" class="customer-row" style="display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 5em 5em; border-bottom: 1px solid #2b69cc;">
     <div class="customer-first-name">@Customer.Id</div>
     <div class="customer-first-name">@Customer.FirstName</div>
     <div class="customer-last-name">@Customer.LastName</div>
     <div class="customer-dob">@Customer.Dob.ToShortDateString()</div>
-    <button>Edit</button>
-    <button style="background-color: red; color: white;">Delete</button>
+    <button style="max-height: 50px;" @onclick="() => OnEditAction?.Invoke(Customer.Id)">Edit</button>
+    <button style="max-height: 50px; background-color: red; color: white;" @onclick="() => OnDeleteAction?.Invoke(Customer.Id)">Delete</button>
 </div>
 
 @code {
     [Parameter, EditorRequired] public Customer Customer { get; set; } = new();
+
+    [Parameter] public Action<string>? OnEditAction { get; set; } = null;
+    [Parameter] public Action<string>? OnDeleteAction { get; set; } = null;
 }
