@@ -1,13 +1,13 @@
-﻿using PinewoodBackend.Shared;
+﻿using PinewoodBackend.Database;
 
 namespace PinewoodBackend.Services
 {
     public interface ICustomerService
     {
         public IEnumerable<Customer> GetAllCustomers();
-        public Customer? GetCustomerByID(string id);
-        public void AddNewCustomer(string firstName, string lastName, DateTime dob);
-        public void DeleteCustomer(string id);
-        public bool ModifyCustomer(string id, string firstName, string lastName, DateTime dob);
+        public Customer? GetCustomerByID(int id);
+        public bool AddNewCustomer(string firstName, string lastName, DateTime dob);
+        public bool DeleteCustomer(int id);
+        public bool ModifyCustomer(int id, string firstName, string lastName, DateTime dob);
     }
 }

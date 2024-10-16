@@ -2,7 +2,7 @@
 @using PinewoodFrontend.Shared
 @inject NavigationManager NavManager
 
-<div id="customer-@Customer.Id" class="customer-row" style="display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 5em 5em; border-bottom: 1px solid #2b69cc;">
+<div id="customer-@Customer.Id" class="customer-row" style="display: grid; grid-template-columns: .5fr 1fr 1fr 1fr 5em 5em; border-bottom: 1px solid #2b69cc;">
     <div class="customer-first-name">@Customer.Id</div>
     <div class="customer-first-name">@Customer.FirstName</div>
     <div class="customer-last-name">@Customer.LastName</div>
@@ -14,6 +14,6 @@
 @code {
     [Parameter, EditorRequired] public Customer Customer { get; set; } = new();
 
-    [Parameter] public Action<string>? OnEditAction { get; set; } = null;
-    [Parameter] public Action<string>? OnDeleteAction { get; set; } = null;
+    [Parameter] public Action<int>? OnEditAction { get; set; } = null;
+    [Parameter] public Action<int>? OnDeleteAction { get; set; } = null;
 }

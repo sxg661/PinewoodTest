@@ -9,9 +9,14 @@ namespace PinewoodBackend.Controllers
     public class CustomerController : ControllerBase
     {
 		private ICustomerService customerService;
+		private ActionResult badIdResult;
+		private ActionResult notFoundResult;
+
 		public CustomerController(ICustomerService customerService)
 		{
 			this.customerService = customerService;
+			badIdResult = StatusCode(400, "Id should be an integer");
+			notFoundResult = StatusCode(404, "Customer not found");
 		}
 
 		[HttpGet(Name = "GetAll")]
@@ -23,11 +28,21 @@ namespace PinewoodBackend.Controllers
 		[HttpGet("{id}", Name = "GetById")]
 		public ActionResult GetCustomer(string id)
 		{
-			var customer = customerService.GetCustomerByID(id);
-
-			if(customer == null)
+			if (!int.TryParse(id, out int intId))
 			{
-				return StatusCode(404, "Customer not found");
+				return badIdResult;
+			}
+
+			if (customerService.GetCustomerByID(intId) == null)
+			{
+				return notFoundResult;
+			}
+
+			var customer = customerService.GetCustomerByID(intId);
+
+			if (customer == null)
+			{
+				return notFoundResult;
 			}
 
 			var customerJson = JsonSerializer.Serialize(customer);
@@ -44,16 +59,35 @@ namespace PinewoodBackend.Controllers
         [HttpDelete("{id}", Name = "Delete")]
         public ActionResult DeleteCustomer(string id)
         {
-            customerService.DeleteCustomer(id);
-            return StatusCode(200, "Deletion successful");
-        }
+			if(!int.TryParse(id, out int intId))
+			{
+				return badIdResult;
+			}
+
+			if(customerService.GetCustomerByID(intId) == null)
+			{
+				return notFoundResult;
+			}
+
+			customerService.DeleteCustomer(intId);
+			return StatusCode(200, "Deletion successful");
+		}
 
         [HttpPatch("{id}", Name = "Modify")]
 		public ActionResult ModifyCustomer(string id, string firstName, string lastName, DateTime dob)
 		{
-			var success = customerService.ModifyCustomer(id, firstName, lastName, dob);
+			if (!int.TryParse(id, out int intId))
+			{
+				return badIdResult;
+			}
 
-			return success ? StatusCode(200, "Modification successful") : StatusCode(404, "Customer not found");
+			if (customerService.GetCustomerByID(intId) == null)
+			{
+				return notFoundResult;
+			}
+
+			customerService.ModifyCustomer(intId, firstName, lastName, dob);
+			return StatusCode(200, "Modification successful");
 		}
 	}
 }

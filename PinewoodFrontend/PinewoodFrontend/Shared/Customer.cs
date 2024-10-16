@@ -5,7 +5,7 @@ namespace PinewoodFrontend.Shared
     public class Customer
     {
         [JsonPropertyName("Id")]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [JsonPropertyName("FirstName")]
         public string FirstName { get; set; }

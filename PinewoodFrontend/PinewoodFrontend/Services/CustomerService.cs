@@ -33,7 +33,7 @@ namespace PinewoodFrontend.Services
 			}
 		}
 
-		public async Task<Customer?> GetCustomerById(string customerId)
+		public async Task<Customer?> GetCustomerById(int customerId)
 		{
 			var response = await httpClient.GetAsync($"/Customer/{customerId}");
 			var responseText = await response.Content.ReadAsStringAsync();
@@ -70,7 +70,7 @@ namespace PinewoodFrontend.Services
 			return status == 200;
 		}
 
-		public async Task<bool> ModifyCustomer(string customerId, string firstName, string lastName, DateTime dateOfBirth)
+		public async Task<bool> ModifyCustomer(int customerId, string firstName, string lastName, DateTime dateOfBirth)
 		{
 			string queryString = BuildQueryString(firstName, lastName, dateOfBirth);
 			string url = $"/Customer/{customerId}?" + queryString;
@@ -82,7 +82,7 @@ namespace PinewoodFrontend.Services
 			return status == 200;
 		}
 
-		public async Task<bool> DeleteCustomer(string customerId)
+		public async Task<bool> DeleteCustomer(int customerId)
 		{
 			try
 			{

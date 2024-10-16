@@ -10,7 +10,7 @@
 <div style="margin: 100px">
 	<h1>Customers</h1>
 
-	<div class="title-row" style="display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 10em; border-bottom: 1px solid #2b69cc; font-weight: bold;">
+	<div class="title-row" style="display: grid; grid-template-columns: .5fr 1fr 1fr 1fr 10em; border-bottom: 1px solid #2b69cc; font-weight: bold;">
 		<div>Id</div>
 		<div>First Name</div>
 		<div>Last Name</div>
@@ -35,7 +35,7 @@
 		Customers = await CustomerService.GetCustomers();
 	}
 
-	public async void DeleteCustomer(string customerId)
+	public async void DeleteCustomer(int customerId)
 	{
 		if (await CustomerService.DeleteCustomer(customerId))
 		{
@@ -44,7 +44,7 @@
 		}
 	}
 
-	public void NavigateToEditCustomer(string customerId)
+	public void NavigateToEditCustomer(int customerId)
 	{
 		NavManager.NavigateTo($"/edit-customer/{customerId}");
 	}

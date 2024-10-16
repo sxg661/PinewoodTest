@@ -1,4 +1,3 @@
-using Microsoft.VisualBasic;
 using PinewoodBackend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add injectables
-builder.Services.AddSingleton<ICustomerService, CustomerService>();
+builder.Services.AddSingleton<ICustomerService, CustomerServiceDb>();
 
 var MyAllowFrontend = "_myAllowFrontend";
 builder.Services.AddCors(options =>

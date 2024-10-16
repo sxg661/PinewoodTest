@@ -21,7 +21,7 @@ else
 <div id="error-message" style="color: red; white-space: pre-line;">@errorMessage</div>
 
 @code {
-	[Parameter] public string customerId { get; set; } = "";
+	[Parameter] public string customerId { get; set; } = "Unknown";
 
 	private Customer? customer;
 
@@ -29,12 +29,15 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		customer = await CustomerService.GetCustomerById(customerId);
+		if (int.TryParse(customerId, out int intId))
+		{
+			customer = await CustomerService.GetCustomerById(intId);
+		}
 	}
 
 	private string GetFormTitle()
 	{
-		string customerIDText = customer != null ? customer.Id : "Unknown";
+		string customerIDText = customer != null ? customer.Id.ToString() : "Unknown";
 		return $"Edit Customer with ID: {customerIDText}";
 	}
 
